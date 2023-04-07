@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     commande = sys.argv[i]
     args = sys.argv[i+1:]
-
+    print(f"Commande {commande} args {args} nb {nb} affiche_sortie {affiche_sortie}")
     temps_total = 0
     for i in range(nb):
         debut = time.time()
@@ -45,10 +45,10 @@ if __name__ == "__main__":
         if pid == 0:
             os.execvp(commande, args)
         else:
-            os.wait()
+            pid,status=os.wait()
             fin = time.time()
             temps_total += fin - debut
-            if affiche_sortie:
-                print("Sortie", os.WEXITSTATUS(os.wait()[1]))
+            if affiche_sortie and os.WIFEXITED(status):
+                print("Sortie", os.WEXITSTATUS(status))
 
     print("Temps total", temps_total)
